@@ -1,0 +1,252 @@
+{
+  "name": "Email Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "custom"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "11063muCRqH48sEDeuktXqYOhzm_jE2rfMqVaWRddVz8",
+          "mode": "list",
+          "cachedResultName": "Gen AI proj",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/11063muCRqH48sEDeuktXqYOhzm_jE2rfMqVaWRddVz8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/11063muCRqH48sEDeuktXqYOhzm_jE2rfMqVaWRddVz8/edit#gid=0"
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        0
+      ],
+      "id": "95a53cdf-7658-4df0-9662-69cf4ceb404b",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "3WoE7FFg5QF2Ml9r",
+          "name": "Google Sheets Trigger account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.Email }}",
+        "subject": "Hello Gen AI devloper",
+        "emailType": "text",
+        "message": "welcome to my wokflow",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        288,
+        0
+      ],
+      "id": "b4b845a9-39d4-4976-bacb-8a0aa163bf67",
+      "name": "Send a message",
+      "webhookId": "d01c497f-f944-4a31-b10b-4b9bb00229ad",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "vBEOlLwuNKyWi9Mu",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "fc8a00e3-a34f-4d60-8ec4-82bb10ec0309",
+              "leftValue": "={{ $json.Email }}",
+              "rightValue": "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$",
+              "operator": {
+                "type": "string",
+                "operation": "regex"
+              }
+            },
+            {
+              "id": "83e1303e-b990-4857-9034-d723ea203c44",
+              "leftValue": "={{ $json['Mail sent'] }}",
+              "rightValue": "Yes",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        80,
+        0
+      ],
+      "id": "44d21474-1340-4f16-b816-3018b2c67ad2",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "11063muCRqH48sEDeuktXqYOhzm_jE2rfMqVaWRddVz8",
+          "mode": "list",
+          "cachedResultName": "Gen AI proj",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/11063muCRqH48sEDeuktXqYOhzm_jE2rfMqVaWRddVz8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/11063muCRqH48sEDeuktXqYOhzm_jE2rfMqVaWRddVz8/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Email": "={{ $(\"Google Sheets Trigger\").item.json.Email }}",
+            "Mail sent": "Yes"
+          },
+          "matchingColumns": [
+            "Email"
+          ],
+          "schema": [
+            {
+              "id": "Name ",
+              "displayName": "Name ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Mail sent",
+              "displayName": "Mail sent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        512,
+        0
+      ],
+      "id": "2ccc7960-fc43-4100-8098-d1c7bd77b001",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "knanCSlpgmBKEtwz",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "ffc2f108-4525-411f-88d8-c2aef066e69c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b0b4c9109f83afa09e8b5e5d4095e84791c67da65d6568bf6d28a9fa1dd8f224"
+  },
+  "nodeGroups": [],
+  "id": "m0vSC0SFA2FQDwHx",
+  "tags": []
+}
